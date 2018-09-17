@@ -22,7 +22,7 @@ ethereum:
 
 eventFilters:
   - id: TokenMint
-    contractAddress: ${CONTRACT_ADDRESS:0x4aecf261541f168bb3ca65fa8ff5012498aac3b8}
+    contractAddress: ${CONTRACT_ADDRESS:0x12ecdf734be80a838caaff6bf6dfbabe0954ff4a}
     eventSpecification:
       eventName: Mint
       indexedParameterDefinitions:
@@ -35,7 +35,7 @@ eventFilters:
       type: NON_INDEXED_PARAMETER
       index: 0
   - id: TokenBurn
-    contractAddress: ${CONTRACT_ADDRESS:0x4aecf261541f168bb3ca65fa8ff5012498aac3b8}
+    contractAddress: ${CONTRACT_ADDRESS:0x12ecdf734be80a838caaff6bf6dfbabe0954ff4a}
     eventSpecification:
       eventName: Burn
       indexedParameterDefinitions:
