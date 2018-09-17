@@ -1,7 +1,7 @@
 server:
   tomcat:
     uri-encoding: UTF-8
-  port: 8060
+  port: 8061
 
 logging:
   level:
@@ -15,11 +15,38 @@ logging:
 
 ethereum:
   node:
-    url: http://localhost:8545
+    url: http://172.16.4.46:22001
     healthcheck:
       pollInterval: 2000
   blockStrategy: POLL
 
+eventFilters:
+  - id: TokenMint
+    contractAddress: ${CONTRACT_ADDRESS:0x4aecf261541f168bb3ca65fa8ff5012498aac3b8}
+    eventSpecification:
+      eventName: Mint
+      indexedParameterDefinitions:
+        - position: 0
+          type: ADDRESS
+      nonIndexedParameterDefinitions:
+        - position: 1
+          type: UINT256
+     correlationId:
+      type: NON_INDEXED_PARAMETER
+      index: 0
+  - id: TokenBurn
+    contractAddress: ${CONTRACT_ADDRESS:0x4aecf261541f168bb3ca65fa8ff5012498aac3b8}
+    eventSpecification:
+      eventName: Burn
+      indexedParameterDefinitions:
+        - position: 0
+          type: ADDRESS
+      nonIndexedParameterDefinitions:
+        - position: 1
+          type: UINT256
+     correlationId:
+      type: NON_INDEXED_PARAMETER
+      index: 0
 #eventFilters:
 #  - id: RequestCreated
 #    contractAddress: ${CONTRACT_ADDRESS:0x4aecf261541f168bb3ca65fa8ff5012498aac3b8}
