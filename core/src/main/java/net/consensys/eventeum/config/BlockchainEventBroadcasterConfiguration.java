@@ -3,7 +3,9 @@ package net.consensys.eventeum.config;
 import net.consensys.eventeum.dto.event.filter.ContractEventFilter;
 import net.consensys.eventeum.dto.message.EventeumMessage;
 import net.consensys.eventeum.integration.KafkaSettings;
+import net.consensys.eventeum.integration.RabbitSettings;
 import net.consensys.eventeum.integration.broadcast.blockchain.*;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -53,6 +55,25 @@ public class BlockchainEventBroadcasterConfiguration {
 
         return onlyOnceWrap(broadcaster);
     }
+
+    @Bean
+    @ConditionalOnProperty(name="broadcaster.type", havingValue="LOG")
+    public BlockchainEventBroadcaster loggerBlockChainEventBroadcaster(CrudRepository<ContractEventFilter, String> filterRepository) {
+        final BlockchainEventBroadcaster broadcaster =
+                new LoggerBlockChainEventBroadcaster(filterRepository);
+
+        return onlyOnceWrap(broadcaster);
+    }
+
+    @Bean
+    @ConditionalOnProperty(name="broadcaster.type", havingValue="RABBIT")
+    public BlockchainEventBroadcaster rabbitBlockChainEventBroadcaster(RabbitTemplate rabbitTemplate, RabbitSettings rabbitSettings) {
+        final BlockchainEventBroadcaster broadcaster =
+                new RabbitBlockChainEventBroadcaster(rabbitTemplate,rabbitSettings);
+
+        return onlyOnceWrap(broadcaster);
+    }
+
 
     @Bean
     public RetryTemplate retryTemplate() {

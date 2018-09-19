@@ -58,13 +58,13 @@ public class DefaultEventBlockManagementService implements EventBlockManagementS
         final BigInteger latestBlockNumber = latestBlocks.get(eventSignature);
 
         if (latestBlockNumber != null) {
-            return latestBlockNumber;
+            return latestBlockNumber.add(BigInteger.valueOf(1));
         }
 
         final ContractEventDetails contractEvent = eventStoreService.getLatestContractEvent(eventSignature);
 
         if (contractEvent != null) {
-            return contractEvent.getBlockNumber();
+            return contractEvent.getBlockNumber().add(BigInteger.valueOf(1));
         }
 
         return blockchainService.getCurrentBlockNumber();

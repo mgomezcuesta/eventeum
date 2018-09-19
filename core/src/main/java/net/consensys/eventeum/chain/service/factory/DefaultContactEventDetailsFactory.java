@@ -11,6 +11,7 @@ import net.consensys.eventeum.dto.event.filter.ParameterDefinition;
 import net.consensys.eventeum.dto.event.filter.ParameterType;
 import net.consensys.eventeum.dto.event.parameter.EventParameter;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.web3j.abi.FunctionReturnDecoder;
 import org.web3j.abi.Utils;
@@ -27,6 +28,8 @@ public class DefaultContactEventDetailsFactory implements ContractEventDetailsFa
 
     private EventParameterConverter<Type> parameterConverter;
     private EventConfirmationConfig eventConfirmationConfig;
+    @Value("${ethereum.node.networkName:}")
+    private String networkName;
 
     @Autowired
     DefaultContactEventDetailsFactory(EventParameterConverter<Type> parameterConverter,
@@ -53,6 +56,7 @@ public class DefaultContactEventDetailsFactory implements ContractEventDetailsFa
         eventDetails.setBlockNumber(log.getBlockNumber());
         eventDetails.setBlockHash(log.getBlockHash());
         eventDetails.setEventSpecificationSignature(Web3jUtil.getSignature(eventSpec));
+        eventDetails.setNetworkName(networkName);
 
         if (log.isRemoved()) {
             eventDetails.setStatus(ContractEventStatus.INVALIDATED);

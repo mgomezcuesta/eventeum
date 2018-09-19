@@ -13,71 +13,70 @@ logging:
     file: "%d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %-5p %c: %M - %m%n"
   file: /logs/application.log
 
-ethereum:
-  node:
-    url: http://172.16.4.46:22001
-    healthcheck:
-      pollInterval: 2000
-  blockStrategy: POLL
 
-eventFilters:
-  - id: TokenMint
-    contractAddress: ${CONTRACT_ADDRESS:0x12ecdf734be80a838caaff6bf6dfbabe0954ff4a}
-    eventSpecification:
-      eventName: Mint
-      indexedParameterDefinitions:
-        - position: 0
-          type: ADDRESS
-      nonIndexedParameterDefinitions:
-        - position: 1
-          type: UINT256
-     correlationId:
-      type: NON_INDEXED_PARAMETER
-      index: 0
-  - id: TokenBurn
-    contractAddress: ${CONTRACT_ADDRESS:0x12ecdf734be80a838caaff6bf6dfbabe0954ff4a}
-    eventSpecification:
-      eventName: Burn
-      indexedParameterDefinitions:
-        - position: 0
-          type: ADDRESS
-      nonIndexedParameterDefinitions:
-        - position: 1
-          type: UINT256
-     correlationId:
-      type: NON_INDEXED_PARAMETER
-      index: 0
+
 #eventFilters:
-#  - id: RequestCreated
-#    contractAddress: ${CONTRACT_ADDRESS:0x4aecf261541f168bb3ca65fa8ff5012498aac3b8}
+#  - id: TokenMint
+#    contractAddress: ${CONTRACT_ADDRESS:0x12ecdf734be80a838caaff6bf6dfbabe0954ff4a}
 #    eventSpecification:
-#      eventName: RequestCreated
+#      eventName: Mint
 #      indexedParameterDefinitions:
 #        - position: 0
-#          type: BYTES32
-#        - position: 1
 #          type: ADDRESS
 #      nonIndexedParameterDefinitions:
-#        - position: 2
-#          type: BYTES32
+#        - position: 1
+#          type: UINT256
 #    correlationId:
 #      type: NON_INDEXED_PARAMETER
-#      index: 0
+#      index: 115000
+#  - id: TokenBurnt
+#    contractAddress: ${CONTRACT_ADDRESS:0x12ecdf734be80a838caaff6bf6dfbabe0954ff4a}
+#    eventSpecification:
+#      eventName: Burn
+#      indexedParameterDefinitions:
+#        - position: 0
+#          type: ADDRESS
+#      nonIndexedParameterDefinitions:
+#        - position: 1
+#          type: UINT256
+#    correlationId:
+#      type: NON_INDEXED_PARAMETER
+#      index: 115000
 
 eventStore:
   type: DB
   url: http://localhost:8081/api/rest/v1
   eventPath: /event
 
+spring:
+    rabbitmq:
+        host: http://localhost:5672
+        username: username
+        password: password
+        virtual-host: username
+
+ethereum:
+  node:
+    networkName: alastria
+    url: http://172.16.4.104:22001
+#    url: http://localhost:7545
+    healthcheck:
+      pollInterval: 2000
+  blockStrategy: POLL
+
 broadcaster:
-  type: KAFKA
+  type: RABBIT
   cache:
     expirationMillis: 6000000
   event:
     confirmation:
-      numBlocksToWait: 12
+      numBlocksToWait: 0
       numBlocksToWaitForMissingTx: 100
   multiInstance: false
+
+rabbitmq:
+  exchange: money
+  routingKeyPrefix: eventeum
 
 # For Kafka
 zookeeper:
